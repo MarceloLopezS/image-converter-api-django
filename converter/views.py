@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -34,4 +35,8 @@ def output_format_param_fields(request):
 @csrf_exempt
 def convert(request):
     if request.method == "POST":
-        return image_controller.convert(request, JsonResponse)
+        return image_controller.convert(
+            request,
+            settings.MEDIA_ROOT,
+            JsonResponse
+        )

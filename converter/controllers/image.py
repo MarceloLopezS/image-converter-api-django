@@ -2,8 +2,6 @@ import os
 from io import BytesIO
 import json
 
-from django.conf import settings
-
 from ..utils.functions import \
   is_file_extension_allowed, is_output_format_allowed, are_valid_output_params
 
@@ -26,7 +24,7 @@ class ImageConvertController:
         self.__get_formatted_output_params = \
           handle_get_formatted_output_params
     
-    def convert(self, request, json_response):
+    def convert(self, request, uploads_path, json_response):
         if "file" not in request.FILES:
           return json_response({
               "status": "fail",
@@ -84,7 +82,7 @@ class ImageConvertController:
 
         output_filename = f"{file.name.rsplit(".", 1)[0]}.{output_format}"
         output_path = os.path.join(
-            settings.MEDIA_ROOT, output_filename
+            uploads_path, output_filename
         )
 
         try:
