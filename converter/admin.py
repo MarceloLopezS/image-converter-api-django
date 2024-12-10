@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import InputFileExtension, OutputParamBoolField, \
   OutputParamRangeField, OutputParamSelectField, OutputFormat, \
-  UnsupportedTransparencyFormat
+  UnsupportedTransparencyFormat, ConvertedFile
 
 # Register your models here.
 
@@ -12,3 +12,4 @@ admin.site.register(OutputParamSelectField)
 admin.site.register(OutputParamBoolField)
 admin.site.register(OutputFormat)
 admin.site.register(UnsupportedTransparencyFormat)
+admin.site.register(ConvertedFile)
