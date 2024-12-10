@@ -1,11 +1,8 @@
-from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
 from .models import ConvertedFile
-
-from .utils.functions import delete_empty_dirs
 
 @receiver(post_save, sender=ConvertedFile)
 def cleanup_expired_files(sender, instance, created, **kwargs):
@@ -19,5 +16,3 @@ def cleanup_expired_files(sender, instance, created, **kwargs):
           file_instance.file.delete()
         
       file_instance.delete()
-
-  delete_empty_dirs(settings.MEDIA_ROOT)
