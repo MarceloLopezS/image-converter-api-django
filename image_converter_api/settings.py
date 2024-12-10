@@ -138,5 +138,4 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Media
 MEDIA_ROOT = os.path.join(BASE_DIR, "converter/uploads")
-if not os.path.exists(MEDIA_ROOT):
-  os.mkdir(MEDIA_ROOT)
+os.makedirs(MEDIA_ROOT, exist_ok=True)
