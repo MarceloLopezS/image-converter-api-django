@@ -1,7 +1,21 @@
-from functools import cmp_to_key
+from datetime import timedelta
+from io import BytesIO
+import os
+import uuid
 
+from django.conf import settings
+from django.core.files.base import ContentFile
 from django.db import models
 from django.forms.models import model_to_dict
+from django.utils import timezone
+
+from .utils.constants import DEFAULT_EXPIRATION_TIMEDELTA
+
+def get_unique_upload_path(instance, output_filename):
+    return os.path.join(
+      str(instance.uuid),
+      output_filename
+    )
 
 # Create your models here.
 
@@ -149,6 +163,16 @@ class UnsupportedTransparencyFormat(models.Model):
 
     def __str__(self):
         return f"{self.output_format}"
+    
+
+class ConvertedFile(models.Model):
+    uuid = models.UUIDField(primary_key=True)
+    name = models.CharField(max_length=100)
+    file = models.FileField(upload_to=get_unique_upload_path)
+    expires_at = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.uuid} expires at: {self.expires_at}"
 
 
 class ImageConverter:
