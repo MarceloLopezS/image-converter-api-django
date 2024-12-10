@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+from django.conf import settings
+from django.http import FileResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .utils.constants import MAX_FILE_SIZE_BYTES
@@ -6,6 +7,7 @@ from .utils.constants import MAX_FILE_SIZE_BYTES
 from .routes.allowed_io import allowed_IO_controller
 from .routes.output_format_param_fields import output_param_fields_controller
 from .routes.convert import image_controller
+from .routes.download_converted_file import download_file_controller
 
 # Create your views here.
 
@@ -37,4 +39,15 @@ def convert(request):
         return image_controller.convert(
             request,
             JsonResponse
+        )
+    
+
+@csrf_exempt
+def download_converted_file(request):
+    if request.method == "POST":
+        return download_file_controller.download_file(
+            request,
+            settings.MEDIA_ROOT,
+            JsonResponse,
+            FileResponse
         )
