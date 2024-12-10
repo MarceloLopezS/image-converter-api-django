@@ -14,5 +14,10 @@ urlpatterns = [
     views.output_format_param_fields,
     name="index"
   ),
-  path("convert", views.convert, name="convert")
+  path("convert", views.convert, name="convert"),
+  path(
+    "download-converted-file",
+    views.download_converted_file,
+    name="download_converted_file"
+  )
 ]
