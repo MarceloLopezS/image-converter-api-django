@@ -189,6 +189,12 @@ class ImageConverter:
         Raises an exception if an error ocurrs.
         Returns the converted output image's database uuid.
         """
+        if not isinstance(output_filename, str):
+            raise Exception("Output filename must be a string.")
+        
+        if not isinstance(output_format, str):
+            raise Exception("Output format must be a string.")
+        
 
         mod_args = {}
         for arg in kwargs:
