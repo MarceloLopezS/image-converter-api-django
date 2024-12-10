@@ -1,5 +1,4 @@
 from io import BytesIO
-import os
 import uuid
 
 from django.core.files.base import ContentFile
@@ -10,10 +9,8 @@ from django.utils import timezone
 from .utils.constants import DEFAULT_EXPIRATION_TIMEDELTA
 
 def get_unique_upload_path(instance, output_filename):
-    return os.path.join(
-      str(instance.uuid),
-      output_filename
-    )
+    extension = output_filename.rsplit(".", 1)[1]
+    return f"{instance.uuid}.{extension}"
 
 # Create your models here.
 
