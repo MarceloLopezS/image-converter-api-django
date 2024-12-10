@@ -1,5 +1,3 @@
-import os
-
 def is_file_extension_allowed(filename, allowed_list):
     if not filename:
         return False
@@ -33,14 +31,3 @@ def are_valid_output_params(
             return False
         
     return True
-
-
-def delete_empty_dirs(base_path):
-    for root, dirs, files in os.walk(base_path, topdown=False):
-        for dir in dirs:
-            full_path = os.path.join(root, dir)
-            try:
-                if not os.listdir(full_path):  # Check if directory is empty
-                    os.rmdir(full_path)
-            except Exception as e:
-                print(f"Error removing directory {full_path}: {e}")
