@@ -1,9 +1,7 @@
-from datetime import timedelta
 from io import BytesIO
 import os
 import uuid
 
-from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
 from django.forms.models import model_to_dict
@@ -179,42 +177,56 @@ class ImageConverter:
     def __init__(self, image_processor):
         self.__processor = image_processor
 
-    def convert(self, input_image, output_image_path, output_format, **kwargs):
+    def convert(self,
+      input_image,
+      output_filename,
+      output_format,
+      expiration_timedelta = DEFAULT_EXPIRATION_TIMEDELTA,
+      **kwargs
+    ):
         """
         Converts an image to the specified format.
         Raises an exception if an error ocurrs.
-        Returns the image path of the converted output.
+        Returns the converted output image's database uuid.
         """
-        if not isinstance(output_image_path, str):
-            raise Exception("Output image path must be a string.")
 
-        try:
-            mod_args = {}
-            for arg in kwargs:
-                mod_args[arg] = kwargs[arg]
+        mod_args = {}
+        for arg in kwargs:
+            mod_args[arg] = kwargs[arg]
 
-            with self.__processor.open(input_image) as image:
-                unsupported_transparency_format_objects = \
-                  UnsupportedTransparencyFormat.objects.all()
+        with self.__processor.open(input_image) as image:
+            unsupported_transparency_format_objects = \
+              UnsupportedTransparencyFormat.objects.all()
+            
+            unsupported_transparency_formats = list(map(
+                lambda format_obj: format_obj.output_format.name,
+                unsupported_transparency_format_objects
+            ))
+            
+            if output_format in unsupported_transparency_formats:
+                image = image.convert("RGB")
+                mod_args["keep_rgb"] = True
+
+            if mod_args.get("exif") == True:
+                mod_args["exif"] = image.getexif()
                 
-                unsupported_transparency_formats = list(map(
-                    lambda format_obj: format_obj.output_format.name,
-                    unsupported_transparency_format_objects
-                ))
-                
-                if output_format in unsupported_transparency_formats:
-                    image = image.convert("RGB")
-                    mod_args["keep_rgb"] = True
+            buffer = BytesIO()
+            image.save(
+                buffer,
+                output_format,
+                **mod_args
+            )
+            buffer.seek(0)
 
-                if mod_args.get("exif") == True:
-                    mod_args["exif"] = image.getexif()
-                    
-                image.save(
-                    output_image_path,
-                    output_format,
-                    **mod_args
-                )
-        except Exception as err:
-            raise Exception(f"Convertion processor error: {err}")
-        
-        return output_image_path
+            file_content = ContentFile(buffer.getvalue(), name=output_filename)
+            file_id = uuid.uuid4()
+            
+            converted_file = ConvertedFile(
+                name=output_filename,
+                uuid=file_id,
+                file=file_content,
+                expires_at=timezone.now() + expiration_timedelta
+            )
+            converted_file.save()
+
+            return file_id

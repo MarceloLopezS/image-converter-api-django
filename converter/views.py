@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -37,6 +36,5 @@ def convert(request):
     if request.method == "POST":
         return image_controller.convert(
             request,
-            settings.MEDIA_ROOT,
             JsonResponse
         )
