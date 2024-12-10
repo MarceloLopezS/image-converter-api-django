@@ -128,14 +128,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    'http://localhost:5173',
 ]
 CORS_ALLOW_METHODS = (
-    "GET",
-    "POST",
+    'GET',
+    'POST',
 )
 CORS_ALLOW_CREDENTIALS = True
 
 # Media
-MEDIA_ROOT = os.path.join(BASE_DIR, "converter/uploads")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'converter/uploads')
 os.makedirs(MEDIA_ROOT, exist_ok=True)
