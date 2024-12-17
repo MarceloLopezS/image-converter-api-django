@@ -19,5 +19,10 @@ urlpatterns = [
     "download-converted-file",
     views.download_converted_file,
     name="download_converted_file"
+  ),
+  path(
+    "download-all-converted-files",
+    views.dowload_all_converted_files,
+    name="download_all_converted_files"
   )
 ]
