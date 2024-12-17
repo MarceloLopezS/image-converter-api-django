@@ -26,7 +26,8 @@ class DownloadFileController:
               as_attachment=True,
               status=200
             )
-        except:
+        except Exception as err:
+            print(err)
             return json_response({
                 "status": "fail",
                 "data": { "message": "An error ocurred during file retrieve." }
