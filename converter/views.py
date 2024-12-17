@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.files import File
 from django.http import FileResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -8,6 +9,7 @@ from .routes.allowed_io import allowed_IO_controller
 from .routes.output_format_param_fields import output_param_fields_controller
 from .routes.convert import image_controller
 from .routes.download_converted_file import download_file_controller
+from .routes.download_all_converted_files import download_all_files_controller
 
 # Create your views here.
 
@@ -48,6 +50,18 @@ def download_converted_file(request):
         return download_file_controller.download_file(
             request,
             settings.MEDIA_ROOT,
+            JsonResponse,
+            FileResponse
+        )
+    
+
+@csrf_exempt
+def dowload_all_converted_files(request):
+    if request.method == "POST":
+        return download_all_files_controller.download(
+            request,
+            settings.MEDIA_ROOT,
+            File,
             JsonResponse,
             FileResponse
         )
