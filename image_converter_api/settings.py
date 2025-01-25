@@ -35,7 +35,9 @@ SECRET_KEY = env.str('SECRET_KEY', default=get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = [env('APP_BACK_END_HOST')]
+ALLOWED_HOSTS = [env.str('APP_BACK_END_HOST', default='')]
+
+CSRF_TRUSTED_ORIGINS = [env.str('APP_BACK_END_URL', default='')]
 
 # Application definition
 
@@ -89,11 +91,11 @@ WSGI_APPLICATION = 'image_converter_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('PGDATABASE'),
-        'USER': env('PGUSER'),
-        'PASSWORD': env('PGPASSWORD'),
-        'HOST': env('PGHOST'),
-        'PORT': env('PGPORT'),
+        'NAME': env.str('PGDATABASE', default=''),
+        'USER': env.str('PGUSER', default=''),
+        'PASSWORD': env.str('PGPASSWORD', default=''),
+        'HOST': env.str('PGHOST', default=''),
+        'PORT': env.str('PGPORT', default=''),
     }
 }
 
@@ -141,7 +143,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    env('APP_FRONT_END_URL'),
+    env.str('APP_FRONT_END_URL', default=''),
 ]
 CORS_ALLOW_METHODS = (
     'GET',
