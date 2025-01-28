@@ -2,3 +2,9 @@
 /**/__pycache__
 
 .env
+
+.dockerignore
+Dockerfile
+fly.toml
+
+.github/workflows/fly-deploy.yml
