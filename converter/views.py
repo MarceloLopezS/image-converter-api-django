@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .utils.constants import MAX_FILE_SIZE_BYTES
 
+from .controllers.decorators.rate_limit import rate_limit
+
 from .routes.allowed_io import allowed_IO_controller
 from .routes.output_format_param_fields import output_param_fields_controller
 from .routes.convert import image_controller
@@ -36,6 +38,7 @@ def output_format_param_fields(request):
    
 
 @csrf_exempt
+@rate_limit(key='ip', rate='20/d')
 def convert(request):
     if request.method == "POST":
         return image_controller.convert(
@@ -45,6 +48,7 @@ def convert(request):
     
 
 @csrf_exempt
+@rate_limit(key='ip', rate='20/d')
 def download_converted_file(request):
     if request.method == "POST":
         return download_file_controller.download_file(
