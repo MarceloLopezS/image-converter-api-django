@@ -132,6 +132,17 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Cache
+CACHES = {
+    'default': {
+      'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+      'LOCATION': 'default'
+    },
+    'ratelimit': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'ratelimit',
+    }
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
